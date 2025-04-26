@@ -1,0 +1,18 @@
+2025-04-24 19:59:37,837 - INFO - \U0001f440 Watcher started. Monitoring 'to_process/' for new files.
+2025-04-24 19:59:56,675 - INFO - \U0001f4e5 New file detected: src/automation_research_ai_project/to_process\TinyTake24-04-2025-07-56-01.png
+2025-04-24 19:59:57,679 - INFO - \u2705 File moved to: interactions\img\TinyTake24-04-2025-07-56-01.png
+2025-04-24 20:16:32,425 - INFO - \U0001f4e5 New file detected: src/automation_research_ai_project/to_process\letras.jpeg
+2025-04-24 20:16:33,427 - ERROR - \u274c Error processing file src/automation_research_ai_project/to_process\letras.jpeg: [WinError 3] The system cannot find the path specified
+2025-04-24 20:17:08,324 - INFO - \U0001f6d1 Watcher manually stopped.
+2025-04-24 20:17:10,795 - INFO - \U0001f440 Watcher started. Monitoring 'to_process/' for new files.
+2025-04-24 20:17:56,765 - INFO - \U0001f4e5 New file detected: src/automation_research_ai_project/to_process\letras.jpeg
+2025-04-24 20:17:57,767 - INFO - \u2705 File moved to: interactions\img\letras.jpeg
+2025-04-24 20:18:40,340 - INFO - \U0001f6d1 Watcher manually stopped.
+2025-04-24 20:18:49,536 - INFO - \U0001f440 Watcher started. Monitoring 'to_process/' for new files.
+2025-04-24 20:18:58,422 - INFO - \U0001f4e5 New file detected: src/automation_research_ai_project/to_process\letras.jpeg
+2025-04-24 20:18:59,424 - INFO - \u2705 File moved to: interactions\img\letras.jpeg
+2025-04-24 20:22:35,133 - INFO - \U0001f6d1 Watcher manually stopped.
+2025-04-24 20:22:36,708 - INFO - \U0001f440 Watcher started. Monitoring 'to_process/' for new files.
+2025-04-24 20:22:41,664 - INFO - \U0001f4e5 New file detected: src/automation_research_ai_project/to_process\letras.jpeg
+2025-04-24 20:22:42,665 - INFO - \u2705 File moved to: d:\automation\automation-research\automation_research_ai_project\src\automation_research_ai_project\interactions\img\letras.jpeg
+2025-04-24 20:31:51,521 - INFO - \U0001f6d1 Watcher manually stopped.
