@@ -39,6 +39,10 @@ class LLMRouter:
         prompt = textwrap.dedent(f"""
             You are an assistant that extracts structured expense data from user text.
             Respond ONLY with a valid JSON object. Do not include placeholders or explanations.
+            Wrap all objects in square brackets. Do not forget the opening and closing [ ].
+            Add 2024-10-13 to the date field. By default all prices are in ARS.
+            paymentMethod field by default should be a string.
+            description field by default should be a string.
             Please return a JSON object with the following fields ONLY:
             {fields_str}
             Text:
@@ -55,20 +59,35 @@ class LLMRouter:
         try:
             raw = response['message']['content']
 
-            # 🔧 Strip out LLM-style // comments
+            # 🔧 Clean // comments and trailing commas
             cleaned = re.sub(r"//.*", "", raw)
-
-            # 🔧 Optional: Remove trailing commas before } or ]
             cleaned = re.sub(r",(\s*[}\]])", r"\1", cleaned)
+
+            # 🛠️ Wrap raw blocks in array if not already
+            cleaned_stripped = cleaned.strip()
+            if cleaned_stripped.startswith("{") and cleaned_stripped.count("}") > 1:
+                cleaned = f"[{cleaned}]"
 
             parsed = json.loads(cleaned)
 
-            # ✅ Better fallback for mocked date placeholders
-            invalid_dates = ["not provided", "none", "", "yyyy-mm-dd"]
-            if not parsed.get("date") or parsed["date"].strip().lower() in invalid_dates:
-                parsed["date"] = "2025-01-01"
+            # 🔁 Ensure list for consistent processing
+            parsed_items = parsed if isinstance(parsed, list) else [parsed]
 
-            return Expense(**parsed)
+            # 🧾 Build Expense objects using Pydantic defaults
+            expenses = []
+            for item in parsed_items:
+                # These fields can safely default to None (your Pydantic model will cover them)
+                nullable_fields = {"date", "description", "paymentMethod", "price_USD"}
+
+                for key, value in item.items():
+                    if key in nullable_fields and (
+                        value is None or (isinstance(value, str) and value.strip().lower() in {"", "none", "null", "not provided"})
+                    ):
+                        print(f"⚠️  Field '{key}' was empty or invalid, default will be used.")
+                        item[key] = None
+                expenses.append(Expense(**item))
+
+            return expenses if len(expenses) > 1 else expenses[0]
 
         except Exception as e:
             print("❌ Failed to parse LLM output:")
