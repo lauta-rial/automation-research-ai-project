@@ -1,73 +1,22 @@
-#!/usr/bin/env python
-import sys
-import warnings
 import os
-from dotenv import load_dotenv
-load_dotenv()
-from datetime import datetime
+import json
+from automation_research_ai_project.LLMRouter import LLMRouter
+from automation_research_ai_project.models.expense import Expense
 
-from automation_research_ai_project.crew import AutomationResearchAiProject
+def main():
+    # Base folder pointing to /interactions (where text, audio, img are)
+    base_folder = os.path.join(
+        os.path.dirname(__file__), "interactions"
+    )
 
-warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
+    # Init and run router
+    router = LLMRouter(base_folder)
+    expenses = router.run()
 
-# This main file is intended to be a way for you to run your
-# crew locally, so refrain from adding unnecessary logic into this file.
-# Replace with inputs you want to test with, it will automatically
-# interpolate any tasks and agents information
+    # Output results
+    print("\n📋 Processed Expenses:")
+    for expense in expenses:
+        print(json.dumps(expense.model_dump(), indent=2, ensure_ascii=False, default=str))
 
-def run():
-    """
-    Run the crew.
-    """
-    inputs = {      
-        'topic': 'Bonos, Letras e inversiones en Argentina',
-        'current_year': str(datetime.now().year)
-    }
-
-    print("🚀 Provider:", os.getenv("LITELLM_PROVIDER"))
-    print("🔮 Model:", os.getenv("MODEL_NAME"))
-    
-    try:
-        AutomationResearchAiProject().crew().kickoff(inputs=inputs)
-    except Exception as e:
-        raise Exception(f"An error occurred while running the crew: {e}")
-
-
-def train():
-    """
-    Train the crew for a given number of iterations.
-    """
-    inputs = {
-        "topic": "AI LLMs",
-        'current_year': str(datetime.now().year)
-    }
-    try:
-        AutomationResearchAiProject().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
-
-    except Exception as e:
-        raise Exception(f"An error occurred while training the crew: {e}")
-
-def replay():
-    """
-    Replay the crew execution from a specific task.
-    """
-    try:
-        AutomationResearchAiProject().crew().replay(task_id=sys.argv[1])
-
-    except Exception as e:
-        raise Exception(f"An error occurred while replaying the crew: {e}")
-
-def test():
-    """
-    Test the crew execution and returns the results.
-    """
-    inputs = {
-        "topic": "AI LLMs",
-        "current_year": str(datetime.now().year)
-    }
-    
-    try:
-        AutomationResearchAiProject().crew().test(n_iterations=int(sys.argv[1]), eval_llm=sys.argv[2], inputs=inputs)
-
-    except Exception as e:
-        raise Exception(f"An error occurred while testing the crew: {e}")
+if __name__ == "__main__":
+    main()
