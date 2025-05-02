@@ -1,26 +1,27 @@
 import os
 import json
-from automation_research_ai_project.LLMRouter import LLMRouter
+from dotenv import load_dotenv
+from automation_research_ai_project.ExpenseExtractor import ExpenseExtractor
 from automation_research_ai_project.models.expense import Expense
+import csv
+
+load_dotenv()
 
 def main():
-    # 📂 Folder where text, audio, and img subfolders live
-    base_folder = os.path.join(
-        os.path.dirname(__file__), "interactions"
-    )
+    base_folder = os.environ.get("BASE_FOLDER")
+    output_csv = os.environ.get("OUTPUT_CSV")
+    prompt_file = os.environ.get("PROMPT_FILE")
+    default_date = os.environ.get("DEFAULT_DATE")
+    model_name = os.environ.get("MODEL_NAME")
 
     # ⚙️ Initialize and run router
-    router = LLMRouter(base_folder)
+    router = ExpenseExtractor(base_folder, prompt_file, default_date, model_name)
     results = router.run()
 
     # 🔁 Ensure results is a flat list of Expense objects
     flat_expenses = []
     if isinstance(results, list):
-        for item in results:
-            if isinstance(item, list):
-                flat_expenses.extend(item)
-            else:
-                flat_expenses.append(item)
+        flat_expenses = results
     else:
         flat_expenses = [results]
 
@@ -28,6 +29,18 @@ def main():
     print("\n📋 Processed Expenses:")
     for expense in flat_expenses:
         print(json.dumps(expense.model_dump(), indent=2, ensure_ascii=False, default=str))
+
+    # 📁 Write to CSV file
+    if flat_expenses:
+        with open(output_csv, mode="w", newline='', encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=flat_expenses[0].model_dump().keys())
+            writer.writeheader()
+            for expense in flat_expenses:
+                writer.writerow(expense.model_dump())
+
+        print(f"\n✅ CSV exported to: {output_csv}")
+    else:
+        print("\n⚠️ No expenses to export to CSV.")
 
 if __name__ == "__main__":
     main()
