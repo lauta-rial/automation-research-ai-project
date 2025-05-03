@@ -1,7 +1,7 @@
 import os
 import shutil
 
-class InputClassifier:
+class FileInputClassifier:
     def __init__(self, base_folder=None):
         if base_folder is None:
             base_folder = os.path.abspath(os.path.dirname(__file__))

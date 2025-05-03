@@ -20,7 +20,7 @@ import os
 import logging
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-from src.automation_research_ai_project.interactions.input_classifier import InputClassifier
+from automation_research_ai_project.input_files.FileInputClassifier import FileInputClassifier
 
 # === 🔧 Logging Configuration ===
 os.makedirs("logs", exist_ok=True)
@@ -34,10 +34,10 @@ logging.basicConfig(
 # TODO: 🧾 Optionally separate error logs into logs/watcher_errors.log
 # TODO: 📧 Send email/Slack/notification if a critical error is logged
 
-WATCH_DIR = "src/automation_research_ai_project/to_process"
+WATCH_DIR = os.getenv("WATCH_DIR", "to_process")
 
-class IncomingFileHandler(FileSystemEventHandler):
-    def __init__(self, classifier: InputClassifier):
+class InputFolderWatcher(FileSystemEventHandler):
+    def __init__(self, classifier: FileInputClassifier):
         self.classifier = classifier
 
     def on_created(self, event):
@@ -59,8 +59,8 @@ class IncomingFileHandler(FileSystemEventHandler):
 
 if __name__ == "__main__":
     os.makedirs(WATCH_DIR, exist_ok=True)
-    classifier = InputClassifier()
-    event_handler = IncomingFileHandler(classifier)
+    classifier = FileInputClassifier()
+    event_handler = InputFolderWatcher(classifier)
 
     observer = Observer()
     observer.schedule(event_handler, path=WATCH_DIR, recursive=False)

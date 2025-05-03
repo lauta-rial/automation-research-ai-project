@@ -1,9 +1,9 @@
 import os
 from typing import List
-from automation_research_ai_project.FileRouter import InputRouter
-from automation_research_ai_project.TextHandler import TextHandler
-from automation_research_ai_project.AudioHandler import AudioHandler
-from automation_research_ai_project.ImageHandler import ImageHandler
+from automation_research_ai_project.FileRouter import FileRouter
+from automation_research_ai_project.handlers.TextHandler import TextHandler
+from automation_research_ai_project.handlers.AudioHandler import AudioHandler
+from automation_research_ai_project.handlers.ImageHandler import ImageHandler
 from automation_research_ai_project.models.expense import Expense
 
 class ExpenseExtractor:
@@ -12,7 +12,7 @@ class ExpenseExtractor:
         text_handler = TextHandler(prompt_file, default_date, model_name)
         audio_handler = AudioHandler()
         image_handler = ImageHandler()
-        self.file_router = InputRouter(base_folder, text_handler, audio_handler, image_handler)
+        self.file_router = FileRouter(base_folder, text_handler, audio_handler, image_handler)
 
     def run(self) -> List[Expense]:
         return self.file_router.run()

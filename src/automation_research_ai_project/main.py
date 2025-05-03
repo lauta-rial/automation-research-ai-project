@@ -15,8 +15,8 @@ def main():
     model_name = os.environ.get("MODEL_NAME")
 
     # ⚙️ Initialize and run router
-    router = ExpenseExtractor(base_folder, prompt_file, default_date, model_name)
-    results = router.run()
+    expenseExtractor = ExpenseExtractor(base_folder, prompt_file, default_date, model_name)
+    results = expenseExtractor.run()
 
     # 🔁 Ensure results is a flat list of Expense objects
     flat_expenses = []

@@ -1,6 +1,6 @@
 from typing import List, Union
 from automation_research_ai_project.models.expense import Expense
-from automation_research_ai_project.PromptFormatter import PromptFormatter
+from automation_research_ai_project.prompts.PromptFormatter import PromptFormatter
 from automation_research_ai_project.LLMClient import LLMClient
 from automation_research_ai_project.ExpenseParser import ExpenseParser
 

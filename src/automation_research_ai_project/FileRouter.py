@@ -1,11 +1,11 @@
-import os
 from typing import List
-from automation_research_ai_project.TextHandler import TextHandler
-from automation_research_ai_project.AudioHandler import AudioHandler
-from automation_research_ai_project.ImageHandler import ImageHandler
+import os
+from automation_research_ai_project.handlers.TextHandler import TextHandler
+from automation_research_ai_project.handlers.AudioHandler import AudioHandler
+from automation_research_ai_project.handlers.ImageHandler import ImageHandler
 from automation_research_ai_project.models.expense import Expense
 
-class InputRouter:
+class FileRouter:
     def __init__(self, base_folder: str, text_handler: TextHandler, audio_handler: AudioHandler, image_handler: ImageHandler):
         self.base_folder = base_folder
         self.handlers = {
@@ -16,10 +16,17 @@ class InputRouter:
 
     def run(self) -> List[Expense]:
         results = []
-        for category, handler in self.handlers.items():
-            folder_path = os.path.join(self.base_folder, category)
-            for filename in os.listdir(folder_path):
-                file_path = os.path.join(folder_path, filename)
+        input_folder = os.environ.get("INPUT_FOLDER", "src/automation_research_ai_project/input_folder")
+        for category in os.listdir(input_folder):
+            category_path = os.path.join(input_folder, category)
+            if not os.path.isdir(category_path):
+                continue
+            handler = self.handlers.get(category)
+            if not handler:
+                print(f"❌ No handler for category {category}")
+                continue
+            for filename in os.listdir(category_path):
+                file_path = os.path.join(category_path, filename)
                 print(f"🔄 Processing {file_path}...")
                 try:
                     expense = handler(file_path)
