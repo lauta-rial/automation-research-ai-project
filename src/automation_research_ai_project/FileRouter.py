@@ -6,6 +6,9 @@ from automation_research_ai_project.handlers.ImageHandler import ImageHandler
 from automation_research_ai_project.models.expense import Expense
 
 class FileRouter:
+    """
+    This class is responsible for routing files to the appropriate handler based on their category.
+    """
     def __init__(self, base_folder: str, text_handler: TextHandler, audio_handler: AudioHandler, image_handler: ImageHandler):
         self.base_folder = base_folder
         self.handlers = {

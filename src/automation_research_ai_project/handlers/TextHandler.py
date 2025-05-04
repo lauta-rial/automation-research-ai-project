@@ -5,6 +5,9 @@ from automation_research_ai_project.LLMClient import LLMClient
 from automation_research_ai_project.ExpenseParser import ExpenseParser
 
 class TextHandler:
+    """
+    This class is responsible for handling text files and extracting expense information.
+    """
     def __init__(self, prompt_file: str, default_date: str, model_name: str):
         self.prompt_formatter = PromptFormatter(prompt_file, default_date)
         self.llm_client = LLMClient(model_name)
